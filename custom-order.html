@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Personalizado | Shield Sheep</title>
+    <meta name="description" content="Diseña tu prenda única con símbolos hebreos. Elige tu prenda, símbolo, color y nosotros lo hacemos realidad.">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- ============================================================
+         🎨 ZONA CSS — separar en custom-order-style.css
+         ============================================================ -->
+    <style>
+        :root {
+            --oro:     #d4af37;
+            --rojo:    #C1121F;
+            --negro:   #000000;
+            --panel:   #111111;
+            --panel2:  #1a1a1a;
+            --borde:   #2a2a2a;
+            --texto:   #e0e0e0;
+            --muted:   #888888;
+            --blanco:  #ffffff;
+            --verde:   #2ecc71;
+            --tr:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--negro);
+            color: var(--texto);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            position: sticky; top: 0; z-index: 500;
+            background: rgba(0,0,0,0.97);
+            border-bottom: 2px solid var(--oro);
+            padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo-link {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem; color: var(--oro);
+            text-decoration: none; letter-spacing: 3px; font-weight: 700;
+        }
+
+        .back-link {
+            color: var(--muted); text-decoration: none;
+            font-size: 0.85rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 0.5rem;
+            transition: var(--tr);
+        }
+
+        .back-link:hover { color: var(--oro); }
+
+        /* ── HERO ── */
+        .page-hero {
+            background: linear-gradient(135deg, #000 0%, #1a0a0a 60%, #0a0a00 100%);
+            border-bottom: 1px solid var(--borde);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: 'בצלם';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18rem;
+            color: rgba(212,175,55,0.03);
+            font-family: 'Cinzel', serif;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .hero-label {
+            font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 4px;
+            color: var(--rojo); margin-bottom: 1rem;
+        }
+
+        .page-hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem; color: var(--blanco);
+            font-weight: 700; line-height: 1.1;
+            margin-bottom: 1rem; letter-spacing: 2px;
+        }
+
+        .page-hero h1 span { color: var(--oro); }
+
+        .page-hero p {
+            color: var(--muted); font-size: 1rem;
+            max-width: 560px; margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        /* ── PASOS INDICADOR ── */
+        .steps-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            max-width: 640px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-item {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 0.5rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-item::after {
+            content: '';
+            position: absolute;
+            top: 18px; left: 60%;
+            width: 80%; height: 2px;
+            background: var(--borde);
+            transition: background 0.4s ease;
+        }
+
+        .step-item:last-child::after { display: none; }
+        .step-item.done::after { background: var(--oro); }
+
+        .step-circle {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--borde);
+            background: var(--panel);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+            color: var(--muted);
+            transition: var(--tr);
+            z-index: 1;
+        }
+
+        .step-item.active .step-circle {
+            border-color: var(--oro);
+            background: var(--oro);
+            color: var(--negro);
+        }
+
+        .step-item.done .step-circle {
+            border-color: var(--verde);
+            background: var(--verde);
+            color: #fff;
+        }
+
+        .step-label {
+            font-size: 0.72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+            color: var(--muted); transition: var(--tr);
+            text-align: center; white-space: nowrap;
+        }
+
+        .step-item.active .step-label { color: var(--oro); }
+        .step-item.done  .step-label  { color: var(--verde); }
+
+        /* ── FORMULARIO MULTI-PASO ── */
+        .form-container {
+            max-width: 780px;
+            margin: 4rem auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .form-step { display: none; animation: fadeStep 0.4s ease; }
+        .form-step.active { display: block; }
+
+        @keyframes fadeStep {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .step-title {
+            font-family: 'Cinzel', serif;
+            color: var(--oro); font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-subtitle {
+            color: var(--muted); font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* ── CARDS SELECTOR (prendas) ── */
+        .prenda-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .prenda-card {
+            background: var(--panel);
+            border: 2px solid var(--borde);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--tr);
+        }
+
+        .prenda-card:hover { border-color: var(--muted); }
+        .prenda-card.selected { border-color: var(--oro); background: rgba(212,175,55,0.08); }
+
+        .prenda-icon { font-size: 2.2rem; margin-bottom: 0.8rem; display: block; }
+        .prenda-name { font-weight: 700; font-size: 0.9rem; color: var(--texto); }
+        .prenda-sub  { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
+
+        /* ── INPUT ESTILO ── */
+        .field-group { margin-bottom: 1.8rem; }
+
+        .field-label {
+            display: block;
+            font-size: 0.82rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--muted); margin-bottom: 0.7rem;
+        }
+
+        .field-label span { color: var(--rojo); margin-left: 2px; }
+
+        .field-input,
+        .field-textarea,
+        .field-select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--panel2);
+            border: 2px solid var(--borde);
+            border-radius: 10px;
+            color: var(--blanco);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--tr);
+        }
+
+        .field-input:focus,
+        .field-textarea:focus,
+        .field-select:focus {
+            outline: none;
+            border-color: var(--oro);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px rgba(212,175,55,0.15);
+        }
+
+        .field-input::placeholder,
+        .field-textarea::placeholder { color: #555; }
+        .field-textarea { resize: vertical; min-height: 120px; }
+        .field-select option { background: #1a1a1a; }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* ── SELECTOR SÍMBOLO HEBREO ── */
+        .simbolos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .simbolo-card {
+            background: var(--panel);
+            border: 2px solid var(--borde);
+            border-radius: 10px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--tr);
+        }
+
+        .simbolo-card:hover { border-color: var(--muted); }
+        .simbolo-card.selected { border-color: var(--oro); background: rgba(212,175,55,0.1); }
+
+        .simbolo-letra { font-size: 1.8rem; color: var(--oro); display: block; margin-bottom: 0.3rem; }
+        .simbolo-nom   { font-size: 0.65rem; color: var(--muted); }
+
+        /* ── SELECTOR COLOR ── */
+        .colores-row {
+            display: flex; flex-wrap: wrap; gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-opt {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: var(--tr);
+            position: relative;
+        }
+
+        .color-opt.selected { border-color: var(--oro); transform: scale(1.15); }
+        .color-opt::after {
+            content: '✓';
+            position: absolute; inset: 0;
+            display: none; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.9);
+        }
+        .color-opt.selected::after { display: flex; }
+
+        /* ── UPLOAD IMAGEN ── */
+        .upload-zone {
+            border: 2px dashed var(--oro);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--tr);
+            background: rgba(212,175,55,0.03);
+            position: relative;
+        }
+
+        .upload-zone:hover { background: rgba(212,175,55,0.07); border-color: var(--oro-claro, #e8c84a); }
+        .upload-zone input { display: none; }
+
+        .upload-icon  { font-size: 2.5rem; color: var(--oro); margin-bottom: 1rem; display: block; }
+        .upload-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
+        .upload-sub   { color: var(--muted); font-size: 0.85rem; }
+
+        .upload-preview {
+            margin-top: 1.5rem;
+            display: none;
+            position: relative;
+        }
+
+        .upload-preview img {
+            max-width: 100%; max-height: 250px;
+            border-radius: 10px; border: 2px solid var(--oro);
+            object-fit: contain;
+        }
+
+        .upload-preview .remove-img {
+            position: absolute; top: -10px; right: -10px;
+            background: var(--rojo); color: #fff;
+            border: none; border-radius: 50%;
+            width: 28px; height: 28px;
+            font-size: 0.9rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--tr);
+        }
+
+        .upload-preview .remove-img:hover { transform: scale(1.1); background: #ff0000; }
+
+        /* ── RESUMEN ── */
+        .resumen-card {
+            background: var(--panel);
+            border: 2px solid var(--oro);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .resumen-card h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--oro); font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 1rem;
+        }
+
+        .resumen-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #1e1e1e;
+            font-size: 0.9rem;
+            gap: 1rem;
+        }
+
+        .resumen-row:last-child { border-bottom: none; }
+        .resumen-key   { color: var(--muted); flex-shrink: 0; }
+        .resumen-value { color: var(--blanco); font-weight: 500; text-align: right; }
+
+        .wa-notice {
+            background: rgba(37,211,102,0.08);
+            border: 1px solid rgba(37,211,102,0.3);
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            font-size: 0.88rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .wa-notice i { color: #25d366; font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+
+        /* ── BOTONES NAV ── */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn-prev, .btn-next, .btn-send {
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--tr);
+            font-family: 'Montserrat', sans-serif;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+
+        .btn-prev {
+            background: transparent;
+            color: var(--muted);
+            border: 2px solid var(--borde);
+        }
+
+        .btn-prev:hover { border-color: var(--muted); color: var(--blanco); }
+
+        .btn-next {
+            flex: 1;
+            background: var(--oro);
+            color: var(--negro);
+            border: 2px solid var(--oro);
+            justify-content: center;
+        }
+
+        .btn-next:hover {
+            background: transparent; color: var(--oro);
+            box-shadow: 0 0 25px rgba(212,175,55,0.3);
+        }
+
+        .btn-send {
+            flex: 1;
+            background: #25d366;
+            color: #fff;
+            border: 2px solid #25d366;
+            justify-content: center;
+        }
+
+        .btn-send:hover { background: transparent; color: #25d366; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed; bottom: 2rem; right: 2rem;
+            padding: 1rem 1.8rem; border-radius: 8px;
+            font-weight: 600; font-size: 0.9rem;
+            z-index: 3000; max-width: 300px;
+            animation: slideInR 0.3s ease-out;
+        }
+
+        .toast.success { background: var(--verde); color: #fff; }
+        .toast.warning { background: #f39c12; color: #fff; }
+
+        @keyframes slideInR  { from { opacity:0; transform:translateX(80px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes slideOutR { from { opacity:1; transform:translateX(0); }    to { opacity:0; transform:translateX(80px); } }
+
+        /* ── FOOTER ── */
+        .footer-mini {
+            background: #000; border-top: 3px solid var(--oro);
+            padding: 2rem; text-align: center;
+        }
+
+        .footer-mini a {
+            font-family: 'Cinzel', serif; font-size: 1.1rem;
+            color: var(--oro); text-decoration: none; letter-spacing: 3px;
+        }
+
+        .footer-mini p { color: var(--muted); font-size: 0.8rem; margin-top: 0.4rem; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 2rem; }
+            .field-row    { grid-template-columns: 1fr; }
+            .nav-buttons  { flex-direction: column; }
+            .btn-prev     { order: 2; }
+            .prenda-grid  { grid-template-columns: repeat(3, 1fr); }
+            .steps-bar    { gap: 0; }
+            .step-label   { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .prenda-grid   { grid-template-columns: repeat(2, 1fr); }
+            .simbolos-grid { grid-template-columns: repeat(4, 1fr); }
+            header { padding: 0.8rem 1rem; }
+            .logo-link { font-size: 1.2rem; }
+        }
+    </style>
+    <!-- ============================================================
+         FIN ZONA CSS
+         ============================================================ -->
+</head>
+<body>
+
+<!-- ============================================================
+     🏗️ ZONA HTML — separar en custom-order.html
+     ============================================================ -->
+
+<!-- HEADER -->
+<header>
+    <a href="index.html" class="logo-link">🐑 Shield Sheep</a>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Volver a la tienda
+    </a>
+</header>
+
+<!-- HERO -->
+<div class="page-hero">
+    <div class="hero-label">Diseño Exclusivo</div>
+    <h1>Tu prenda, <span>tu símbolo</span></h1>
+    <p>Cuéntanos qué quieres y nosotros lo hacemos realidad. Cada pedido personalizado es único — no hay dos iguales.</p>
+
+    <!-- BARRA DE PASOS -->
+    <div class="steps-bar" id="stepsBar">
+        <div class="step-item active" id="step-ind-1">
+            <div class="step-circle">1</div>
+            <div class="step-label">Prenda</div>
+        </div>
+        <div class="step-item" id="step-ind-2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Diseño</div>
+        </div>
+        <div class="step-item" id="step-ind-3">
+            <div class="step-circle">3</div>
+            <div class="step-label">Detalles</div>
+        </div>
+        <div class="step-item" id="step-ind-4">
+            <div class="step-circle">4</div>
+            <div class="step-label">Confirmar</div>
+        </div>
+    </div>
+</div>
+
+<!-- FORMULARIO MULTI-PASO -->
+<div class="form-container">
+
+    <!-- ── PASO 1: PRENDA ── -->
+    <div class="form-step active" id="form-step-1">
+        <h2 class="step-title">¿Qué prenda quieres personalizar?</h2>
+        <p class="step-subtitle">Selecciona el tipo de prenda base para tu diseño.</p>
+
+        <div class="prenda-grid" id="prendaGrid">
+            <div class="prenda-card" onclick="selectPrenda(this, 'Camiseta')">
+                <span class="prenda-icon">👕</span>
+                <div class="prenda-name">Camiseta</div>
+                <div class="prenda-sub">Desde $35.000</div>
+            </div>
+            <div class="prenda-card" onclick="selectPrenda(this, 'Hoodie / Sudadera')">
+                <span class="prenda-icon">🧥</span>
+                <div class="prenda-name">Hoodie</div>
+                <div class="prenda-sub">Desde $85.000</div>
+            </div>
+            <div class="prenda-card" onclick="selectPrenda(this, 'Chaqueta')">
+                <span class="prenda-icon">🧣</span>
+                <div class="prenda-name">Chaqueta</div>
+                <div class="prenda-sub">Desde $95.000</div>
+            </div>
+            <div class="prenda-card" onclick="selectPrenda(this, 'Gorra')">
+                <span class="prenda-icon">🧢</span>
+                <div class="prenda-name">Gorra</div>
+                <div class="prenda-sub">Desde $25.000</div>
+            </div>
+            <div class="prenda-card" onclick="selectPrenda(this, 'Pantalón deportivo')">
+                <span class="prenda-icon">👖</span>
+                <div class="prenda-name">Pantalón</div>
+                <div class="prenda-sub">Desde $60.000</div>
+            </div>
+            <div class="prenda-card" onclick="selectPrenda(this, 'Otro / Consultar')">
+                <span class="prenda-icon">✨</span>
+                <div class="prenda-name">Otro</div>
+                <div class="prenda-sub">Consultar</div>
+            </div>
+        </div>
+
+        <div class="field-row">
+            <div class="field-group">
+                <label class="field-label">Talla <span>*</span></label>
+                <select class="field-select" id="talla">
+                    <option value="">— Selecciona —</option>
+                    <option>XS</option><option>S</option><option>M</option>
+                    <option>L</option><option>XL</option><option>2XL</option>
+                    <option>3XL</option><option>Talla única</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label class="field-label">Cantidad <span>*</span></label>
+                <input type="number" class="field-input" id="cantidad"
+                       min="1" max="200" value="1" placeholder="1">
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <div></div>
+            <button class="btn-next" onclick="goToStep(2)">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── PASO 2: DISEÑO ── -->
+    <div class="form-step" id="form-step-2">
+        <h2 class="step-title">¿Qué símbolo llevas en el corazón?</h2>
+        <p class="step-subtitle">Elige un símbolo hebreo predefinido o escribe el texto que quieres.</p>
+
+        <div class="field-group">
+            <label class="field-label">Símbolo hebreo <span>*</span></label>
+            <div class="simbolos-grid" id="simbolosGrid">
+                <!-- Se llena con JS -->
+            </div>
+            <p style="font-size:0.8rem;color:var(--muted);">
+                ¿No encuentras el tuyo? Escríbelo abajo en el campo de texto o símbolo personalizado.
+            </p>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Texto / símbolo personalizado</label>
+            <input type="text" class="field-input" id="simboloCustom"
+                   placeholder="Ej: יהוה, AMOR, tu nombre en hebreo..."
+                   maxlength="50">
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Color base de la prenda <span>*</span></label>
+            <div class="colores-row" id="coloresRow">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Color del diseño / símbolo <span>*</span></label>
+            <div class="colores-row" id="coloresDisenioRow">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" onclick="goToStep(1)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-next" onclick="goToStep(3)">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── PASO 3: DETALLES E IMAGEN ── -->
+    <div class="form-step" id="form-step-3">
+        <h2 class="step-title">Cuéntanos más sobre tu pedido</h2>
+        <p class="step-subtitle">Entre más detalles nos des, mejor será tu prenda.</p>
+
+        <div class="field-group">
+            <label class="field-label">Imagen de referencia</label>
+            <div class="upload-zone" onclick="document.getElementById('refImage').click()" id="uploadZone">
+                <input type="file" id="refImage" accept="image/*" onchange="handleImageUpload(event)">
+                <span class="upload-icon">📎</span>
+                <div class="upload-title">Sube una imagen de referencia</div>
+                <div class="upload-sub">JPG, PNG, WebP — máx. 5MB (opcional pero recomendado)</div>
+            </div>
+            <div class="upload-preview" id="uploadPreview">
+                <img id="previewImg" src="" alt="Vista previa">
+                <button class="remove-img" onclick="removeImage(event)" type="button">✕</button>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Posición del diseño en la prenda</label>
+            <select class="field-select" id="posicion">
+                <option value="">— Selecciona —</option>
+                <option>Pecho izquierdo (centrado)</option>
+                <option>Pecho derecho</option>
+                <option>Centro del pecho</option>
+                <option>Espalda completa</option>
+                <option>Manga izquierda</option>
+                <option>Manga derecha</option>
+                <option>Parte baja del frente</option>
+                <option>A definir con el equipo</option>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Nota adicional / instrucciones especiales</label>
+            <textarea class="field-textarea" id="nota"
+                      placeholder="Cuéntanos cualquier detalle importante: tamaño del diseño, fuente preferida, si quieres un mensaje adicional, para qué ocasión es, fecha límite de entrega..."
+                      maxlength="1000"></textarea>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Tu nombre <span>*</span></label>
+            <input type="text" class="field-input" id="clienteNombre"
+                   placeholder="¿Cómo te llamamos?" maxlength="100">
+        </div>
+
+        <div class="field-row">
+            <div class="field-group">
+                <label class="field-label">WhatsApp / Teléfono <span>*</span></label>
+                <input type="tel" class="field-input" id="clienteTel"
+                       placeholder="+57 300 000 0000">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Ciudad de entrega</label>
+                <input type="text" class="field-input" id="clienteCiudad"
+                       placeholder="Bogotá, Medellín, Cali...">
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" onclick="goToStep(2)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-next" onclick="goToStep(4)">
+                Revisar pedido <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── PASO 4: RESUMEN Y ENVÍO ── -->
+    <div class="form-step" id="form-step-4">
+        <h2 class="step-title">Revisa tu pedido</h2>
+        <p class="step-subtitle">Confirma que todo esté bien antes de enviarnos el pedido por WhatsApp.</p>
+
+        <div class="resumen-card" id="resumenCard">
+            <h3>📋 Resumen del Pedido</h3>
+            <!-- Se llena con JS -->
+        </div>
+
+        <div class="wa-notice">
+            <i class="fab fa-whatsapp"></i>
+            <div>
+                <strong style="color:#25d366;display:block;margin-bottom:0.3rem;">¿Cómo funciona?</strong>
+                Al hacer clic en "Enviar pedido", se abrirá WhatsApp con todos los detalles de tu pedido ya escritos. Nuestro equipo te responderá con el precio final, tiempo de entrega y proceso de pago. Sin compromiso previo.
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" onclick="goToStep(3)">
+                <i class="fas fa-arrow-left"></i> Editar
+            </button>
+            <button class="btn-send" onclick="sendOrder()">
+                <i class="fab fa-whatsapp"></i> Enviar pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer-mini">
+    <a href="index.html">🐑 Shield Sheep</a>
+    <p>&copy; 2026 Shield Sheep · Bogotá, Colombia · Wear Your Faith</p>
+</div>
+
+<!-- FIN ZONA HTML -->
+
+<!-- ============================================================
+     ⚙️ ZONA JS — separar en custom-order.js
+     ============================================================ -->
+<script>
+// ── DATOS ────────────────────────────────────────────────────────────
+const SIMBOLOS = [
+    { letra: 'א', nom: 'Aleph' },   { letra: 'ב', nom: 'Bet' },
+    { letra: 'ג', nom: 'Gimel' },   { letra: 'ד', nom: 'Dalet' },
+    { letra: 'ה', nom: 'He' },      { letra: 'ו', nom: 'Vav' },
+    { letra: 'ז', nom: 'Zayin' },   { letra: 'ח', nom: 'Jet' },
+    { letra: 'ט', nom: 'Tet' },     { letra: 'י', nom: 'Yod' },
+    { letra: 'כ', nom: 'Kaf' },     { letra: 'ל', nom: 'Lamed' },
+    { letra: 'מ', nom: 'Mem' },     { letra: 'נ', nom: 'Nun' },
+    { letra: 'ס', nom: 'Samej' },   { letra: 'ע', nom: 'Ayin' },
+    { letra: 'פ', nom: 'Pe' },      { letra: 'צ', nom: 'Tzadi' },
+    { letra: 'ק', nom: 'Qof' },     { letra: 'ר', nom: 'Resh' },
+    { letra: 'שׁ', nom: 'Shin' },   { letra: 'ת', nom: 'Tav' },
+    { letra: '✡', nom: 'Magen David' }, { letra: '🕎', nom: 'Menorah' }
+];
+
+const COLORES_PRENDA = [
+    { hex: '#1a1a1a', nom: 'Negro' },    { hex: '#ffffff', nom: 'Blanco' },
+    { hex: '#1c3a6e', nom: 'Azul marino' }, { hex: '#c0392b', nom: 'Rojo' },
+    { hex: '#2c3e50', nom: 'Grafito' },  { hex: '#7f8c8d', nom: 'Gris' },
+    { hex: '#1a6b3c', nom: 'Verde militar' }, { hex: '#6c3483', nom: 'Morado' },
+    { hex: '#d4af37', nom: 'Dorado' },   { hex: '#e67e22', nom: 'Naranja' }
+];
+
+const COLORES_DISENO = [
+    { hex: '#d4af37', nom: 'Dorado' },   { hex: '#ffffff', nom: 'Blanco' },
+    { hex: '#c0392b', nom: 'Rojo' },     { hex: '#1c3a6e', nom: 'Azul' },
+    { hex: '#1a1a1a', nom: 'Negro' },    { hex: '#2ecc71', nom: 'Verde' },
+    { hex: '#e67e22', nom: 'Naranja' },  { hex: '#c0c0c0', nom: 'Plateado' }
+];
+
+// ── ESTADO ────────────────────────────────────────────────────────────
+const pedido = {
+    prenda:        '',
+    talla:         '',
+    cantidad:      1,
+    simbolo:       '',
+    colorPrenda:   '',
+    colorDisenio:  '',
+    posicion:      '',
+    nota:          '',
+    nombre:        '',
+    telefono:      '',
+    ciudad:        '',
+    tieneImagen:   false
+};
+
+let currentStep = 1;
+const TOTAL_STEPS = 4;
+
+// ── RENDER INICIAL ────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    renderSimbolos();
+    renderColores('coloresRow',        COLORES_PRENDA,  'colorPrenda');
+    renderColores('coloresDisenioRow', COLORES_DISENO,  'colorDisenio');
+});
+
+function renderSimbolos() {
+    document.getElementById('simbolosGrid').innerHTML = SIMBOLOS.map(s => `
+        <div class="simbolo-card" onclick="selectSimboloCard(this, '${s.letra}')">
+            <span class="simbolo-letra">${s.letra}</span>
+            <div class="simbolo-nom">${s.nom}</div>
+        </div>`).join('');
+}
+
+function renderColores(containerId, colores, campo) {
+    document.getElementById(containerId).innerHTML = colores.map(c => `
+        <div class="color-opt" title="${c.nom}"
+             style="background:${c.hex};border-color:${c.hex === '#ffffff' ? '#555' : 'transparent'};"
+             onclick="selectColor(this, '${c.nom}', '${campo}')">
+        </div>`).join('');
+}
+
+// ── SELECTORES ───────────────────────────────────────────────────────
+function selectPrenda(el, val) {
+    document.querySelectorAll('.prenda-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    pedido.prenda = val;
+}
+
+function selectSimboloCard(el, letra) {
+    document.querySelectorAll('.simbolo-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    pedido.simbolo = letra;
+    document.getElementById('simboloCustom').value = '';
+}
+
+function selectColor(el, nom, campo) {
+    const parent = el.parentElement;
+    parent.querySelectorAll('.color-opt').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    pedido[campo] = nom;
+}
+
+// ── UPLOAD IMAGEN ─────────────────────────────────────────────────────
+function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('La imagen no debe superar 5MB', 'warning');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = ev => {
+        document.getElementById('previewImg').src  = ev.target.result;
+        document.getElementById('uploadPreview').style.display = 'block';
+        document.getElementById('uploadZone').style.display    = 'none';
+        pedido.tieneImagen = true;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage(e) {
+    e.stopPropagation();
+    document.getElementById('refImage').value                   = '';
+    document.getElementById('uploadPreview').style.display      = 'none';
+    document.getElementById('uploadZone').style.display         = 'block';
+    pedido.tieneImagen = false;
+}
+
+// ── NAVEGACIÓN DE PASOS ───────────────────────────────────────────────
+function goToStep(n) {
+    if (n > currentStep && !validateStep(currentStep)) return;
+
+    // Recoger datos del paso actual antes de avanzar
+    collectStep(currentStep);
+
+    // Ocultar paso actual
+    document.getElementById(`form-step-${currentStep}`).classList.remove('active');
+    updateStepIndicator(currentStep, 'done');
+
+    currentStep = n;
+
+    // Mostrar nuevo paso
+    document.getElementById(`form-step-${n}`).classList.add('active');
+    updateStepIndicator(n, 'active');
+
+    // Scroll al formulario
+    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Si llegamos al resumen, construirlo
+    if (n === 4) buildResumen();
+}
+
+function updateStepIndicator(step, state) {
+    const el = document.getElementById(`step-ind-${step}`);
+    if (!el) return;
+    el.classList.remove('active', 'done');
+    if (state) el.classList.add(state);
+
+    // Marcar líneas previas como done
+    if (state === 'done') {
+        for (let i = 1; i < step; i++) {
+            const prev = document.getElementById(`step-ind-${i}`);
+            if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
+        }
+    }
+}
+
+function collectStep(step) {
+    if (step === 1) {
+        pedido.talla    = document.getElementById('talla').value;
+        pedido.cantidad = parseInt(document.getElementById('cantidad').value) || 1;
+    }
+    if (step === 2) {
+        const custom = document.getElementById('simboloCustom').value.trim();
+        if (custom) pedido.simbolo = custom;
+    }
+    if (step === 3) {
+        pedido.posicion = document.getElementById('posicion').value;
+        pedido.nota     = document.getElementById('nota').value.trim();
+        pedido.nombre   = document.getElementById('clienteNombre').value.trim();
+        pedido.telefono = document.getElementById('clienteTel').value.trim();
+        pedido.ciudad   = document.getElementById('clienteCiudad').value.trim();
+    }
+}
+
+function validateStep(step) {
+    if (step === 1) {
+        if (!pedido.prenda) {
+            showToast('Por favor selecciona el tipo de prenda', 'warning');
+            return false;
+        }
+        const talla = document.getElementById('talla').value;
+        if (!talla) {
+            showToast('Por favor selecciona una talla', 'warning');
+            return false;
+        }
+        const qty = parseInt(document.getElementById('cantidad').value);
+        if (!qty || qty < 1) {
+            showToast('La cantidad debe ser al menos 1', 'warning');
+            return false;
+        }
+    }
+
+    if (step === 2) {
+        const custom = document.getElementById('simboloCustom').value.trim();
+        if (!pedido.simbolo && !custom) {
+            showToast('Por favor selecciona o escribe un símbolo', 'warning');
+            return false;
+        }
+        if (!pedido.colorPrenda) {
+            showToast('Por favor selecciona el color de la prenda', 'warning');
+            return false;
+        }
+        if (!pedido.colorDisenio) {
+            showToast('Por favor selecciona el color del diseño', 'warning');
+            return false;
+        }
+    }
+
+    if (step === 3) {
+        const nombre = document.getElementById('clienteNombre').value.trim();
+        const tel    = document.getElementById('clienteTel').value.trim();
+        if (!nombre) {
+            showToast('Por favor escribe tu nombre', 'warning');
+            return false;
+        }
+        if (!tel) {
+            showToast('Por favor escribe tu número de WhatsApp', 'warning');
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// ── RESUMEN ───────────────────────────────────────────────────────────
+function buildResumen() {
+    const card = document.getElementById('resumenCard');
+    const rows = [
+        ['Prenda',            pedido.prenda       || '—'],
+        ['Talla',             pedido.talla        || '—'],
+        ['Cantidad',          pedido.cantidad + ' unidad(es)'],
+        ['Símbolo',           pedido.simbolo      || '—'],
+        ['Color prenda',      pedido.colorPrenda  || '—'],
+        ['Color diseño',      pedido.colorDisenio || '—'],
+        ['Posición',          pedido.posicion     || 'A definir'],
+        ['Imagen adjunta',    pedido.tieneImagen ? 'Sí ✓' : 'No'],
+        ['Notas adicionales', pedido.nota         || 'Sin notas'],
+        ['Tu nombre',         pedido.nombre       || '—'],
+        ['WhatsApp',          pedido.telefono     || '—'],
+        ['Ciudad',            pedido.ciudad       || '—']
+    ];
+
+    card.innerHTML = `<h3>📋 Resumen del Pedido</h3>` +
+        rows.map(([k, v]) => `
+        <div class="resumen-row">
+            <span class="resumen-key">${k}</span>
+            <span class="resumen-value">${v}</span>
+        </div>`).join('');
+}
+
+// ── ENVÍO POR WHATSAPP ────────────────────────────────────────────────
+function sendOrder() {
+    const msg = [
+        '🐑 *PEDIDO PERSONALIZADO — Shield Sheep*',
+        '',
+        `👤 *Cliente:* ${pedido.nombre}`,
+        `📱 *Contacto:* ${pedido.telefono}`,
+        `📍 *Ciudad:* ${pedido.ciudad || 'No especificada'}`,
+        '',
+        '━━━━━━━━━━━━━━━━━━━━',
+        '🎨 *DETALLES DEL DISEÑO*',
+        '━━━━━━━━━━━━━━━━━━━━',
+        `👕 *Prenda:* ${pedido.prenda}`,
+        `📏 *Talla:* ${pedido.talla}`,
+        `🔢 *Cantidad:* ${pedido.cantidad}`,
+        `🔤 *Símbolo:* ${pedido.simbolo}`,
+        `🎨 *Color prenda:* ${pedido.colorPrenda}`,
+        `✒️ *Color diseño:* ${pedido.colorDisenio}`,
+        `📌 *Posición:* ${pedido.posicion || 'A definir'}`,
+        `🖼️ *Imagen de referencia:* ${pedido.tieneImagen ? 'Sí (adjunta en conversación)' : 'No'}`,
+        '',
+        '📝 *Notas:*',
+        pedido.nota || 'Sin notas adicionales',
+        '',
+        '━━━━━━━━━━━━━━━━━━━━',
+        '¿Cuál es el precio y tiempo de entrega para este pedido?'
+    ].join('%0A');
+
+    const wa = window.open(
+        `https://wa.me/573505424345?text=${msg}`,
+        '_blank', 'noopener,noreferrer'
+    );
+    if (wa) wa.opener = null;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className   = `toast ${type}`;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => {
+        t.style.animation = 'slideOutR 0.3s ease-in forwards';
+        setTimeout(() => t.remove(), 300);
+    }, 3000);
+}
+</script>
+<!-- ============================================================
+     FIN ZONA JS
+     ============================================================ -->
+
+</body>
+</html>
